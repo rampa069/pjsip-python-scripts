@@ -29,8 +29,8 @@ ENDPOINT_NAME = None  # Variable para almacenar el nombre del endpoint
 
 for line in data_lines:
     if line.startswith(" Endpoint:"):
-        if CURRENT_ENDPOINT:
-            CURRENT_ENDPOINT["Endpoint"] = ENDPOINT_NAME.split()[0] 
+        if CURRENT_ENDPOINT is not None:
+            CURRENT_ENDPOINT["Endpoint"] = ENDPOINT_NAME.split()[0]
             data.append(CURRENT_ENDPOINT)
         CURRENT_ENDPOINT = {"Endpoint": "", "Aor": CURRENT_AOR, "Channels": [], "Contact": {}}
         CURRENT_AOR = None
