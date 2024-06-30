@@ -2,7 +2,8 @@
 
 """
 endpoints.py
-Este módulo contiene funciones y clases para analizar y generar un reporte de los endpoints y su estado.
+Este módulo contiene funciones y clases para analizar y generar
+ un reporte de los endpoints y su estado.
 """
 
 import subprocess
@@ -29,7 +30,7 @@ ENDPOINT_NAME = None  # Variable para almacenar el nombre del endpoint
 for line in data_lines:
     if line.startswith(" Endpoint:"):
         if CURRENT_ENDPOINT:
-            CURRENT_ENDPOINT["Endpoint"] = ENDPOINT_NAME.split()[0]  # Obtener solo la primera palabra del nombre
+            CURRENT_ENDPOINT["Endpoint"] = ENDPOINT_NAME.split()[0] 
             data.append(CURRENT_ENDPOINT)
         CURRENT_ENDPOINT = {"Endpoint": "", "Aor": CURRENT_AOR, "Channels": [], "Contact": {}}
         CURRENT_AOR = None
@@ -60,7 +61,7 @@ for line in data_lines:
 
 # Añadir el último endpoint procesado
 if CURRENT_ENDPOINT:
-    CURRENT_ENDPOINT["Endpoint"] = ENDPOINT_NAME.split()[0]  # Obtener solo la primera palabra del nombre
+    CURRENT_ENDPOINT["Endpoint"] = ENDPOINT_NAME.split()[0]
     data.append(CURRENT_ENDPOINT)
 
 # Crear el DataFrame
