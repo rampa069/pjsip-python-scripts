@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""
+endpoints.py
+Este módulo contiene funciones y clases para analizar y generar un reporte de los endpoints y su estado.
+"""
+
 import subprocess
 import pandas as pd
 from jinja2 import Template

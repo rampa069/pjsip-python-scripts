@@ -3,6 +3,12 @@ import subprocess
 import pandas as pd
 from jinja2 import Template
 
+
+"""
+quality.py
+Este módulo procesa la salida de asterisk -rx pjsip show channelstats y genera una pagina html user friendly
+"""
+
 # Ejecutar el comando "asterisk -rx 'pjsip show channelstats'"
 result = subprocess.run(["asterisk", "-rx", "pjsip show channelstats"], stdout=subprocess.PIPE)
 output = result.stdout.decode()
