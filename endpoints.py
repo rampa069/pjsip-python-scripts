@@ -22,22 +22,22 @@ data_lines = output.strip().split('\n')[2:]  # Saltar las primeras 2 líneas
 
 # Filtrar y limpiar los datos
 data = []
-current_endpoint = None
-current_aor = None
-endpoint_name = None  # Variable para almacenar el nombre del endpoint
+CURRENT_ENDPOINT = None
+CURRENT_AOR = None
+ENDPOINT_NAME = None  # Variable para almacenar el nombre del endpoint
 
 for line in data_lines:
     if line.startswith(" Endpoint:"):
-        if current_endpoint:
-            current_endpoint["Endpoint"] = endpoint_name.split()[0]  # Obtener solo la primera palabra del nombre
-            data.append(current_endpoint)
-        current_endpoint = {"Endpoint": "", "Aor": current_aor, "Channels": [], "Contact": {}}
-        current_aor = None
-        endpoint_name = line.split(":")[1].strip()  # Obtener el nombre completo del nuevo endpoint
+        if CURRENT_ENDPOINT:
+            CURRENT_ENDPOINT["Endpoint"] = ENDPOINT_NAME.split()[0]  # Obtener solo la primera palabra del nombre
+            data.append(CURRENT_ENDPOINT)
+        CURRENT_ENDPOINT = {"Endpoint": "", "Aor": CURRENT_AOR, "Channels": [], "Contact": {}}
+        CURRENT_AOR = None
+        ENDPOINT_NAME = line.split(":")[1].strip()  # Obtener el nombre completo del nuevo endpoint
     elif line.startswith("        Aor:"):
-        current_aor = line.split(":")[1].strip()
+        CURRENT_AOR = line.split(":")[1].strip()
     elif line.startswith("    Channel:"):
-        if current_endpoint is None:
+        if CURRENT_ENDPOINT is None:
             continue
         parts = line.split()
         channel_info = {
@@ -45,9 +45,9 @@ for line in data_lines:
             "State": parts[2],
             "Time": parts[3]
         }
-        current_endpoint["Channels"].append(channel_info)
+        CURRENT_ENDPOINT["Channels"].append(channel_info)
     elif line.startswith("      Contact:"):
-        if current_endpoint is None:
+        if CURRENT_ENDPOINT is None:
             continue
         parts = line.split()
         contact_info = {
@@ -56,18 +56,18 @@ for line in data_lines:
             "Status": parts[3],
             "RTT": parts[4]
         }
-        current_endpoint["Contact"] = contact_info
+        CURRENT_ENDPOINT["Contact"] = contact_info
 
 # Añadir el último endpoint procesado
-if current_endpoint:
-    current_endpoint["Endpoint"] = endpoint_name.split()[0]  # Obtener solo la primera palabra del nombre
-    data.append(current_endpoint)
+if CURRENT_ENDPOINT:
+    CURRENT_ENDPOINT["Endpoint"] = ENDPOINT_NAME.split()[0]  # Obtener solo la primera palabra del nombre
+    data.append(CURRENT_ENDPOINT)
 
 # Crear el DataFrame
 df = pd.DataFrame(data)
 
 # Plantilla HTML para el informe con diseño moderno y fichas de endpoints
-html_template = """
+HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -184,7 +184,7 @@ html_template = """
 """
 
 # Renderizar el informe HTML
-template = Template(html_template)
+template = Template(HTML_TEMPLATE)
 html_content = template.render(endpoints=df.to_dict(orient='records'))
 
 # Guardar el informe HTML en un archivo
