@@ -2,8 +2,8 @@
 
 """
 endpoints.py
-Este módulo contiene funciones y clases para analizar y generar
- un reporte de los endpoints y su estado.
+Este módulo contiene funciones y clases para analizar y 
+generar un reporte de los endpoints y su estado.
 """
 
 import subprocess
@@ -23,22 +23,22 @@ data_lines = output.strip().split('\n')[2:]  # Saltar las primeras 2 líneas
 
 # Filtrar y limpiar los datos
 data = []
-CURRENT_ENDPOINT = None
-CURRENT_AOR = None
-ENDPOINT_NAME = None  # Variable para almacenar el nombre del endpoint
+current_endpoint = None
+current_aor = None
+endpoint_name = None  # Variable para almacenar el nombre del endpoint
 
 for line in data_lines:
     if line.startswith(" Endpoint:"):
-        if CURRENT_ENDPOINT is not None:
-            CURRENT_ENDPOINT["Endpoint"] = ENDPOINT_NAME.split()[0]
-            data.append(CURRENT_ENDPOINT)
-        CURRENT_ENDPOINT = {"Endpoint": "", "Aor": CURRENT_AOR, "Channels": [], "Contact": {}}
-        CURRENT_AOR = None
-        ENDPOINT_NAME = line.split(":")[1].strip()  # Obtener el nombre completo del nuevo endpoint
+        if current_endpoint is not None:
+            current_endpoint["Endpoint"] = endpoint_name.split()[0]  
+            data.append(current_endpoint)
+        current_endpoint = {"Endpoint": "", "Aor": current_aor, "Channels": [], "Contact": {}}
+        current_aor = None
+        endpoint_name = line.split(":")[1].strip() 
     elif line.startswith("        Aor:"):
-        CURRENT_AOR = line.split(":")[1].strip()
+        current_aor = line.split(":")[1].strip()
     elif line.startswith("    Channel:"):
-        if CURRENT_ENDPOINT is None:
+        if current_endpoint is None:
             continue
         parts = line.split()
         channel_info = {
@@ -46,9 +46,9 @@ for line in data_lines:
             "State": parts[2],
             "Time": parts[3]
         }
-        CURRENT_ENDPOINT["Channels"].append(channel_info)
+        current_endpoint["Channels"].append(channel_info)
     elif line.startswith("      Contact:"):
-        if CURRENT_ENDPOINT is None:
+        if current_endpoint is None:
             continue
         parts = line.split()
         contact_info = {
@@ -57,18 +57,18 @@ for line in data_lines:
             "Status": parts[3],
             "RTT": parts[4]
         }
-        CURRENT_ENDPOINT["Contact"] = contact_info
+        current_endpoint["Contact"] = contact_info
 
 # Añadir el último endpoint procesado
-if CURRENT_ENDPOINT:
-    CURRENT_ENDPOINT["Endpoint"] = ENDPOINT_NAME.split()[0]
-    data.append(CURRENT_ENDPOINT)
+if current_endpoint is not None:
+    current_endpoint["Endpoint"] = endpoint_name.split()[0]
+    data.append(current_endpoint)
 
 # Crear el DataFrame
 df = pd.DataFrame(data)
 
 # Plantilla HTML para el informe con diseño moderno y fichas de endpoints
-HTML_TEMPLATE = """
+html_template = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -185,7 +185,7 @@ HTML_TEMPLATE = """
 """
 
 # Renderizar el informe HTML
-template = Template(HTML_TEMPLATE)
+template = Template(html_template)
 html_content = template.render(endpoints=df.to_dict(orient='records'))
 
 # Guardar el informe HTML en un archivo
