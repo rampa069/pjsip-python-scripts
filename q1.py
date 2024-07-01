@@ -2,6 +2,12 @@
 import subprocess
 import pandas as pd
 from jinja2 import Template
+import json
+
+# Leer datos desde el fichero de configuración
+with open('config.json', 'r') as config_file:
+    config = json.load(config_file)
+    reports = config['reports']
 
 # Ejecutar el comando "asterisk -rx 'pjsip show channelstats'"
 result = subprocess.run(["asterisk", "-rx", "pjsip show channelstats"], stdout=subprocess.PIPE)
@@ -73,11 +79,67 @@ html_template = """
     <meta http-equiv="refresh" content="60">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Call Quality Report</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f7ff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        .poor-quality {
+            background-color: #ffcccc;
+        }
+        .good-quality {
+            background-color: #ccffcc;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>Call Quality Report</h1>
+        <center><h1>{{description}}</h1></center>
+        <select id="reportDropdown" onchange="location = this.value;">
+            {{options}}
+        </select>
+        <div id="reportDescription"><h1><center>{{description}}</center></h1></div>
         <table>
             <tr>
                 <th>BridgeId</th>
@@ -116,13 +178,29 @@ html_template = """
         </table>
     </div>
     <footer>GibFibreSpeed SBC v0.1-ShoeStringBudget</footer>
+    <script>
+        const dropdown = document.getElementById('reportDropdown');
+        const description = document.getElementById('reportDescription');
+        dropdown.addEventListener('change', function() {
+            const selectedOption = dropdown.options[dropdown.selectedIndex];
+            description.textContent = selectedOption.getAttribute('data-description');
+        });
+        // Set the initial description based on the first option
+        if (dropdown.options.length > 0) {
+            const initialOption = dropdown.options[0];
+            description.textContent = initialOption.getAttribute('data-description');
+        }
+    </script>
 </body>
 </html>
 """
 
+# Generar opciones del desplegable
+options = ''.join([f'<option value="{report["url"]}" data-description="{report["description"]}">{report["name"]}</option>' for report in reports])
+
 # Renderizar el informe HTML
 template = Template(html_template)
-html_content = template.render(rows=df.to_dict(orient='records'))
+html_content = template.render(rows=df.to_dict(orient='records'), options=options, description="")
 
 # Guardar el informe HTML en un archivo
 with open("call_quality_report.html", "w") as file:

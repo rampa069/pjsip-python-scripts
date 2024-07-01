@@ -64,54 +64,15 @@ def create_channel_report(calls):
         <meta http-equiv="refresh" content="60">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>PJSIP Channels Report</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f0f7ff;
-                margin: 0;
-                padding: 0;
-            }
-            .container {
-                width: 80%;
-                margin: 20px auto;
-                background-color: #fff;
-                padding: 20px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                border-radius: 8px;
-            }
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 10px;
-            }
-            th, td {
-                border: 1px solid #ddd;
-                padding: 8px;
-                text-align: left;
-            }
-            th {
-                background-color: #f2f2f2;
-                color: #333;
-            }
-            tr:nth-child(odd) {
-                background-color: #cfe2f3;
-            }
-            tr:nth-child(even) {
-                background-color: #a6c8e2;
-            }
-            footer {
-                text-align: center;
-                margin-top: 20px;
-                color: #666;
-            }
-        </style>
+        <link rel="stylesheet" type="text/css" href="styles.css">
     </head>
     <body>
         <div class="container">
             <h1>PJSIP Channels Report</h1>
             {% for call_id, channels in calls.items() %}
             <h2>Call ID: {{ call_id }}</h2>
-            <table>
+            <table class="channel-table">
+
                 <tr>
                     <th>Channel</th>
                     <th>Context</th>

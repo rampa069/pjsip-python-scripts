@@ -75,64 +75,7 @@ HTML_TEMPLATE = """
     <meta http-equiv="refresh" content="60">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PJSIP Endpoints Report</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f7ff;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 80%;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        .endpoint-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 20px;
-            background-color: #f9f9f9;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .endpoint-card-header {
-            background-color: #f2f2f2;
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-            border-radius: 8px 8px 0 0;
-        }
-        .endpoint-info {
-            margin-top: 10px;
-        }
-        .channel-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        .channel-table th, .channel-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        .channel-table th {
-            background-color: #f2f2f2;
-            color: #333;
-        }
-        .channel-table tr:nth-child(odd) {
-            background-color: #cfe2f3;  /* Azul claro */
-        }
-        .channel-table tr:nth-child(even) {
-            background-color: #a6c8e2;  /* Azul más oscuro */
-        }
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
     <div class="container">
