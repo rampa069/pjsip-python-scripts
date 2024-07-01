@@ -83,7 +83,7 @@ html_template = """
 
             <tr>
                 <th>Endpoint</th>
-                <th>Current Calls</th>
+                <th>Current Channels</th>
             </tr>
             {% for row in rows %}
             <tr>
