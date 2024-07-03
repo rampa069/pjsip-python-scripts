@@ -45,11 +45,12 @@ def get_endpoints_calls():
     endpoints = []
 
     for line in data_lines:
-        if line.startswith(" Endpoint:") and "In use" in line:
+        if line.startswith(" Endpoint:") and ("In use" in line or "Ring" in line):
             parts = line.split()
             endpoint = parts[1]
             current_calls = parts[-3]
             endpoints.append({"Endpoint": endpoint, "CurrentCalls": current_calls})
+
 
     return pd.DataFrame(endpoints)
 
